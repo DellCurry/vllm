@@ -4,6 +4,7 @@ import enum
 
 from vllm.connector.base_connector import (BaseConnector, BaseFileConnector,
                                            BaseKVConnector)
+from vllm.connector.hpkv import HPKVConnector
 from vllm.connector.redis import RedisConnector
 from vllm.connector.s3 import S3Connector
 from vllm.logger import init_logger
@@ -20,6 +21,8 @@ class ConnectorType(str, enum.Enum):
 def create_remote_connector(url, device="cpu") -> BaseConnector:
     connector_type = parse_connector_type(url)
     match connector_type:
+        case "hpkv":
+            return HPKVConnector(url)
         case "redis":
             return RedisConnector(url)
         case "s3":
